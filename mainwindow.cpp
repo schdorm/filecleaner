@@ -28,6 +28,7 @@ const int sourceID = 1;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), mapper(this)
 {
   ui.setupUi(this);
+  ui.actionQuit->setShortcut(QKeySequence::Quit);
   
   mapper.setMapping(ui.selectDirectoryButton_1, sourceID);
   mapper.setMapping(ui.selectDirectoryButton_2, 2);
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), mapper(this)
   connect(&mapper, SIGNAL(mapped(int)), this, SLOT(selectFolder(int)));
 //   selectFolder(1);
   
-//   connect(ui.selectDirectoryButton_2, SIGNAL(clicked()), this, SLOT(selectFolder()));
+  connect(ui.compareButton, SIGNAL(clicked()), this, SLOT(compareFiles()));
 }
 
 
@@ -51,4 +52,38 @@ void MainWindow::selectFolder(int i)
   else
     label = ui.directoryLabel_2;  
   label->setText(QFileDialog::getExistingDirectory());
+  if(label->text() != "" )
+    fillTreeWidget(i);
+}
+
+void MainWindow::compareFiles()
+{
+  if(ui.treeWidget_1.topLevelCount() > 0 && ui.treeWidget_2.topLevelCount() > 0)
+  {
+    
+  }
+}
+
+void MainWindow::fillTreeWidget(int i)
+{
+  QLabel *label;
+  QTreeWidget *treeWidget;
+  if(i == sourceID)
+  {
+    label = ui.directoryLabel_1;
+    treeWidget = ui.treeWidget_1;
+  }
+  else
+  {
+    label = ui.directoryLabel_2;  
+    treeWidget = ui.treeWidget_2;
+  }
+  treeWidget->clear();
+  
+  QStringList entryList = QDir(label->text()).entryList();
+  QString itstring;
+  foreach(itstring, entryList)
+  {
+    treeWidget->addTopLevelItem(new QTreeWidgetItem(entryList.filter(itstring)));
+  }
 }

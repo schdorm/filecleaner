@@ -34,9 +34,11 @@ protected:
   
 public:
   MainWindow(QWidget *parent = 0);
+  void fillTreeWidget(int);
 
 public slots:
   void selectFolder(int);
+  void compareFiles();
 };
 
 #endif

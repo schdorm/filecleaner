@@ -20,9 +20,10 @@
 
 #include "mainwindow.h"
 #include <QtGui/QFileDialog>
-
+#include <QtGui/QMessageBox>
 #include <QtGui/QLabel>
 
+#include "compare.h"
 #include <QtDebug>
 
 const int sourceID = 1;
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), mapper(this)
 //   selectFolder(1);
   
   connect(ui.compareButton, SIGNAL(clicked()), this, SLOT(compareFiles()));
+  connect(ui.trashDirectoryButton, SIGNAL(clicked()), this, SLOT(changeTrashDirectory()));
 }
 
 
@@ -58,8 +60,17 @@ void MainWindow::selectFolder(int i)
     fillTreeWidget(i);
 }
 
+void MainWindow::changeTrashDirectory()
+{
+  qWarning() << "void MainWindow::changeTrashDirectory()";
+  ui.trashDirectoryButton->setText(QFileDialog::getExistingDirectory());
+  if(ui.trashDirectoryButton->text() == "")
+    ui.trashDirectoryButton->setText("/tmp");
+}
+
 void MainWindow::compareFiles()
 {
+  qWarning() << "void MainWindow::compareFiles()";
   int count_1 = ui.treeWidget_1->topLevelItemCount();
   int count_2 = ui.treeWidget_2->topLevelItemCount();
   
@@ -72,7 +83,7 @@ void MainWindow::compareFiles()
       stringlist1.append(ui.directoryLabel_1->text() + "/" + (*twitemsiterator)->text(0));
     }
     
-    qWarning() << stringlist1;
+//     qWarning() << stringlist1;
     
     QList<QTreeWidgetItem *> twitems_2 = ui.treeWidget_2->selectedItems();
     QStringList stringlist2;
@@ -80,12 +91,25 @@ void MainWindow::compareFiles()
     {
       stringlist2.append(ui.directoryLabel_2->text() + "/" + (*twitemsiterator2)->text(0));
     }
-    qWarning() << stringlist2;
+//     qWarning() << stringlist2;
+    
+    QStringList doubleFiles = compare(stringlist1, stringlist2);
+    if(ui.actionComboBox->currentIndex() == 0)
+    {
+      QMessageBox::information(this, "Double Files", doubleFiles.join("\n"));
+    }
+    if(ui.actionComboBox->currentIndex() == 1)
+    {
+      // currentText == Move to:
+      qWarning() << "Double Files to be moved:" << ui.actionComboBox->currentText() << doubleFiles;
+      
+    }
   }
 }
 
 void MainWindow::fillTreeWidget(int i)
 {
+  qWarning() << "void MainWindow::fillTreeWidget(int i)";
   QLabel *label;
   QTreeWidget *treeWidget;
   if(i == sourceID)

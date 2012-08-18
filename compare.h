@@ -23,4 +23,4 @@
 
 quint64 hexToDec(const QByteArray &hex);
 
-void compare(const QStringList &list1, const QStringList &list2 );
+QStringList compare(const QStringList &list1, const QStringList &list2 );

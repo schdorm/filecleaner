@@ -11,39 +11,39 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>FileCleaner</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="directoryLabel_1">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="1" column="1">
      <widget class="QLabel" name="directoryLabel_2">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QPushButton" name="selectDirectoryButton_1">
       <property name="text">
        <string>Select Directory (1)</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="2" column="1">
      <widget class="QPushButton" name="selectDirectoryButton_2">
       <property name="text">
        <string>Select Directory (2)</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QTreeWidget" name="treeWidget_1">
       <property name="selectionMode">
        <enum>QAbstractItemView::MultiSelection</enum>
@@ -58,7 +58,7 @@
       </column>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="3" column="1">
      <widget class="QTreeWidget" name="treeWidget_2">
       <property name="selectionMode">
        <enum>QAbstractItemView::MultiSelection</enum>
@@ -73,10 +73,36 @@
       </column>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="4" column="1">
      <widget class="QPushButton" name="compareButton">
       <property name="text">
        <string>Compare!</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QComboBox" name="actionComboBox">
+      <item>
+       <property name="text">
+        <string comment="dp">Display</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string comment="mv">Move to:</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string comment="rm">Remove</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="trashDirectoryButton">
+      <property name="text">
+       <string>/tmp</string>
       </property>
      </widget>
     </item>

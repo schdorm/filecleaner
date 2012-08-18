@@ -1,10 +1,30 @@
-
+/***************************************************************************
+ *   Copyright (C) 2009 - 2012 by Christian Doerffel                       *
+ *   schdorm@googlemail.com                                                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 
 #include "compare.h"
-
 #include <QtCore/QHash>
+#include <QtCore/QFile>
 #include <math.h>
 #include <stdlib.h>
+
+#include <QtCore/QtDebug>
 
 
 quint64 hexToDec(const QByteArray &hex)
@@ -77,13 +97,35 @@ quint64 hexToDec(const QByteArray &hex)
 
 
 
-void compare(const QStringList &list1, const QStringList &list2 )
+QStringList compare(const QStringList &list1, const QStringList &list2 )
 {
+  qWarning() << "QStringList compare(const QStringList &list1, const QStringList &list2 )";
+  QStringList doubleFiles;
   QHash <uint, QString> HashTable1;
-  
-  for(QStringList::const_iterator stringlistiterator = list1.begin(); stringlistiterator != list1.end(); ++ stringlistiterator )
+  QHash <uint, QString> HashTable2;
+  QStringList::const_iterator stringlistiterator;
+  for(stringlistiterator = list1.begin(); stringlistiterator != list1.end(); ++ stringlistiterator )
   {
-    //       QFile file(;
-    //       HashTable1.insert(qHash(QFile
+    QFile file(*stringlistiterator);
+    if(file.open(QIODevice::ReadOnly))
+      HashTable1.insert(qHash(file.readAll()), *stringlistiterator);
   }
+  for(stringlistiterator = list2.begin(); stringlistiterator != list2.end(); ++ stringlistiterator )
+  {
+    QFile file(*stringlistiterator);
+    if(file.open(QIODevice::ReadOnly))
+      if(HashTable1.contains(HashTable2.insert(qHash(file.readAll()), *stringlistiterator).key()))
+      {
+	doubleFiles << *stringlistiterator;
+      }
+  }
+  
+  QHash <uint, QString>::const_iterator it;
+  for(it = HashTable1.constBegin(); it != HashTable1.constEnd(); it++)
+    qWarning() << it.key() << it.value();
+  qWarning() << "Table 2:";
+  for(it = HashTable2.constBegin(); it != HashTable2.constEnd(); it++)
+    qWarning() << it.key() << it.value();
+  qWarning() << "End: compare ( ... )";
+  return doubleFiles;
 }

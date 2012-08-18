@@ -39,6 +39,7 @@ public:
 public slots:
   void selectFolder(int);
   void compareFiles();
+  void changeTrashDirectory();
 };
 
 #endif

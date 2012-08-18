@@ -22,7 +22,7 @@
 #include <QtDebug>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QFileInfo>
+#include <QtGui/QMessageBox>
 
 #include "mainwindow.h"
 
@@ -31,80 +31,18 @@ int main(int argc, char *argv[])
 {
   QApplication app(argc,argv);
   
+  qWarning () << QDir::home().absolutePath() + "/.fileCleaner";
+  
   MainWindow mw;
   mw.show();
-  // QString command = "cd " + app.arguments().at(1) + "; ls; pwd >> /tmp/md5sums; md5sum * >> /tmp/md5sums";
-  // if(!system(command.toUtf8().data()))
-  // {/*
-  // qWarning() << "Worked!";
-  // }*/
   
-  // QStringList files = QDir(argv[1]).entryList(QDir::Files);
-  // qWarning() << QDir::current().entryList(QDir::Files);
-  // QString it; QFile file; 
-  // unsigned int hashSum;
-  // foreach(it, files)
-  // {
-    // file.setFileName(it);
-  // file.open(QIODevice::ReadOnly);
-  // hashSum = qHash(file.readAll());
-  // file.close();
-  // }
-  // QByteArray bf; QString prefix;
-  // QFile file("/tmp/md5sums");
-  // file.open(QIODevice::ReadOnly);
-  // 
-  // quint64 key;
-  // // bool ok;
-  // 
-  // QHash<quint64, QString> fileHash;
-  // 
-  // QHash<quint64, QString> redunFileHash;
-  // 
-  // while(!file.atEnd())
-  // {
-    // 	bf = file.readLine();
-  // 	if(bf.startsWith("/"))
-  // 	{
-    // 		prefix = bf.trimmed();
-  // 		if(!prefix.endsWith("/"))
-  // 			prefix.append("/");
-  // 	}
-  // 	else
-  // 	{
-    // // 		key= bf.left(32).toULongLong(&ok, 16); // md5sum
-  // // 		QByteArray test = bf; //test.prepend("0x");
-  // 		key = hexToDec((bf.trimmed().left(32)));
-  // 		qWarning() << key << bf.trimmed().left(32);
-  // // 		qWarning() << test.left(32) << hexToDec((test.trimmed().left(32)));
-  // // 		if(!ok)
-  // // 			qWarning() << "something went wrong!" << bf.left(32) << bf.trimmed().left(32).toULongLong(&ok, 16);
-  // 		bf.remove(0,33);			// rest is filename
-  // 		if(!fileHash.contains(key))
-  // 			fileHash.insert(key, prefix + bf.trimmed());
-  // 		else 
-  // 		{
-    // 			QFileInfo hashedFile(fileHash.value(key));
-  // 			QFileInfo newFile(bf.trimmed());
-  // 			if(hashedFile.size() == newFile.size())
-  // 			{
-    // 				if(hashedFile.absolutePath() != newFile.absolutePath())
-  // 				{
-    // 					redunFileHash.insertMulti(key, bf.trimmed());
-  // 					redunFileHash.insertMulti(key, fileHash.take(key));
-  // 				}
-  // 				else
-  // 				qWarning() << "Multiple File Entry!";
-  // 			}
-  // 			else
-  // 				fileHash.insertMulti(key, bf.trimmed());
-  // 		}
-  // 	}
-  // }
-  // qWarning() << fileHash;
-  // 
-  // qWarning() << redunFileHash;
-  
-  // app.exec();
+  QFile info(QDir::home().absolutePath() + "/.fileCleaner");
+  if(!info.exists())
+  {
+    QMessageBox::warning(&mw, "Take care!", "Be careful when using this application. It can destroy a lot of data in a few seconds!");
+    info.open(QIODevice::WriteOnly);
+//     info.write(" ");
+    info.close();
+  }
   return app.exec();
 }

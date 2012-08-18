@@ -23,6 +23,8 @@
 
 #include <QtGui/QLabel>
 
+#include <QtDebug>
+
 const int sourceID = 1;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), mapper(this)
@@ -58,9 +60,27 @@ void MainWindow::selectFolder(int i)
 
 void MainWindow::compareFiles()
 {
-  if(ui.treeWidget_1.topLevelCount() > 0 && ui.treeWidget_2.topLevelCount() > 0)
+  int count_1 = ui.treeWidget_1->topLevelItemCount();
+  int count_2 = ui.treeWidget_2->topLevelItemCount();
+  
+  if(count_1 > 0 && count_2 > 0)
   {
+    QList<QTreeWidgetItem *> twitems_1 = ui.treeWidget_1->selectedItems();
+    QStringList stringlist1;
+    for(QList<QTreeWidgetItem *>::const_iterator twitemsiterator = twitems_1.begin(); twitemsiterator != twitems_1.end(); ++ twitemsiterator)
+    {
+      stringlist1.append(ui.directoryLabel_1->text() + "/" + (*twitemsiterator)->text(0));
+    }
     
+    qWarning() << stringlist1;
+    
+    QList<QTreeWidgetItem *> twitems_2 = ui.treeWidget_2->selectedItems();
+    QStringList stringlist2;
+    for(QList<QTreeWidgetItem *>::const_iterator twitemsiterator2 = twitems_2.begin(); twitemsiterator2 != twitems_2.end(); ++ twitemsiterator2)
+    {
+      stringlist2.append(ui.directoryLabel_2->text() + "/" + (*twitemsiterator2)->text(0));
+    }
+    qWarning() << stringlist2;
   }
 }
 
@@ -80,10 +100,18 @@ void MainWindow::fillTreeWidget(int i)
   }
   treeWidget->clear();
   
-  QStringList entryList = QDir(label->text()).entryList();
+  QDir dir (label->text());
+  QStringList entryList = dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot);
+  QStringList fileList = dir.entryList(QDir::Files);
   QString itstring;
+  QTreeWidgetItem *item;
   foreach(itstring, entryList)
   {
-    treeWidget->addTopLevelItem(new QTreeWidgetItem(entryList.filter(itstring)));
+    item = new QTreeWidgetItem(entryList.filter(itstring));
+    if(!fileList.contains(itstring))
+    {
+      qWarning() << "Dir: " << itstring;
+    }
+    treeWidget->addTopLevelItem(item);
   }
 }

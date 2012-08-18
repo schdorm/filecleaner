@@ -23,7 +23,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-#include <math.h>
 
 #include "mainwindow.h"
 

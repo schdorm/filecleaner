@@ -98,12 +98,35 @@ void MainWindow::compareFiles()
     {
       QMessageBox::information(this, "Double Files", doubleFiles.join("\n"));
     }
-    if(ui.actionComboBox->currentIndex() == 1)
+    else if(ui.actionComboBox->currentIndex() == 1)
     {
       // currentText == Move to:
-      qWarning() << "Double Files to be moved:" << ui.actionComboBox->currentText() << doubleFiles;
-      
+      qWarning() << "Duplicate Files to be moved:" << ui.actionComboBox->currentText() << doubleFiles;
+      QString itstring;
+      foreach(itstring, doubleFiles)
+      {
+	qWarning() << "Moving: " << itstring << ui.trashDirectoryButton->text() + "/" + QFileInfo(itstring).fileName();
+	QFile::rename(itstring, ui.trashDirectoryButton->text() + "/" + QFileInfo(itstring).fileName());
+      }
     }
+    else if(ui.actionComboBox->currentIndex() == 2)
+    {
+      if(QMessageBox::warning(this, "Remove duplicate files", "Really remove files?\nThe following files will be removed forever:\n" + doubleFiles.join("\n"), QMessageBox::Ok|QMessageBox::Cancel) == QMessageBox::Ok)
+      {
+	qWarning() << "Removing files:";
+	QString itstring;
+	QDir dir(QDir::tempPath());
+	if(dir.mkdir("fileclean") | dir.cd("fileclean"))
+	{
+	  foreach(itstring, doubleFiles)
+	  {
+	    qWarning() << itstring << dir.absolutePath() + "/" + QFileInfo(itstring).fileName();
+	    QFile::rename(itstring, dir.absolutePath() + "/" + QFileInfo(itstring).fileName());
+	  }
+	}
+      }
+    }
+    fillTreeWidget(2);
   }
 }
 
